@@ -71,6 +71,7 @@ function createPlanet(scene){
     }
 }
 
+
 function createSkybox(scene){
     const skyboxMaterial = new BABYLON.StandardMaterial('skyboxMaterial', scene);
     skyboxMaterial.backFaceCulling = false;
@@ -93,6 +94,16 @@ function createSkybox(scene){
     skybox.material = skyboxMaterial;
 }
 
+function createShip(scene){
+    BABYLON.SceneLoader.ImportMesh('','assets/models/', 'spaceCraft1.obj', scene,(meshes)=>{
+        console.log(meshes);
+        meshes.forEach((mesh)=>{
+            mesh.position = new BABYLON.Vector3(0,-5,10);
+            mesh.scaling = new BABYLON.Vector3(0.2,0.2,0.2);
+        });
+    });
+}
+
 function createScene(){
     //create scene
     const scene = new BABYLON.Scene(engine);
@@ -112,6 +123,9 @@ function createScene(){
 
     //create skybox
     createSkybox(scene);
+
+    //create ship
+    createShip(scene);
 
     return scene;
 }
