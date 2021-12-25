@@ -1,5 +1,14 @@
 /// <reference path='./vendor/babylon.d.ts' />
 
+// TO DO:
+// Menu to snap to planet
+// Snap tp planet on click
+// Display planet facts
+// Change orbit speed
+// Make earth spin
+// Add moon
+// Show orbit lines
+
 //get canvas
 const canvas = document.getElementById('renderCanvas');
 
@@ -10,7 +19,8 @@ const engine = new BABYLON.Engine(canvas, true);
 function createCamera(scene){
 
     const camera = new BABYLON.ArcRotateCamera('camera', 0,0,15, BABYLON.Vector3.Zero(), scene);
-    camera.attachControl(canvas);
+    camera.setTarget(BABYLON.Vector3.Zero());
+    camera.attachControl(canvas, true);
 
     //limit movement
     camera.lowerRadiusLimit = 6;
@@ -166,7 +176,7 @@ function createEarth(scene){
     earth.material = earthMaterial;
 
     earth.position.x = 16.642;
-    earth.rotation.y = -23.5;
+    earth.rotation.y = 11.75;
     earth.rotation.x = 180;
 
     earth.orbit = {
@@ -178,7 +188,13 @@ function createEarth(scene){
     earth.actionManager = new BABYLON.ActionManager(scene);
     earth.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
         function(){
-            console.log("clicked");
+            const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3.Zero(), scene);
+            camera.setTarget(earth);
+            scene.activeCamera = camera;
+            scene.activeCamera.attachControl(canvas, true);
+            camera.lowerRadiusLimit = 1.5;
+            camera.upperRadiusLimit = 500;
+
         }));
 
         scene.registerBeforeRender(()=>{
@@ -296,7 +312,7 @@ function createUranus(scene){
         segments:16,
         diameter:1.82095
     }, scene)
-    
+
     planet.material = material;
 
     planet.position.x = 319.370;
