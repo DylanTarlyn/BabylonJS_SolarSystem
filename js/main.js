@@ -8,12 +8,13 @@ const engine = new BABYLON.Engine(canvas, true);
 
 
 function createCamera(scene){
+
     const camera = new BABYLON.ArcRotateCamera('camera', 0,0,15, BABYLON.Vector3.Zero(), scene);
     camera.attachControl(canvas);
 
     //limit movement
     camera.lowerRadiusLimit = 6;
-    camera.upperRadiusLimit = 200;
+    camera.upperRadiusLimit = 500;
 }
 
 function createLight(scene){
@@ -26,7 +27,7 @@ function createLight(scene){
 function createSun(scene){
     const sun = BABYLON.MeshBuilder.CreateSphere('sun', {
         segments:16,
-        diameter:4
+        diameter:5
     }, scene);
 
     const sunMaterial = new BABYLON.StandardMaterial('sunMaterial', scene);
@@ -49,42 +50,39 @@ function createSun(scene){
 
 }
 
-function createEarth(scene){
+// Planet oribital speeds
 
-    //Earth
-    const earthMaterial = new BABYLON.StandardMaterial('earthMaterial', scene);
-    earthMaterial.diffuseTexture = new BABYLON.Texture('assets/images/earth.jpg', scene);
-    earthMaterial.specularColor = BABYLON.Color3.Black();
+// multiplier .0002089 * 1.5
+//47.87 * .0002089 * 1.5 = .0150 Mercury
+//35.02 .00731568 = .0110 Venus
+//29.78 .00622104 = .0093 Earth
+//24.077 .00502969 = .0075 Mars
+//13.07 .00273032 = .0041 Jupiter
+//9.69 .00202424 = .0030 Staurn
+//6.81 .00142261 = .0021 Uranus
+//5.43 .00113433 = .0017 Neptune
 
-    const earth = BABYLON.MeshBuilder.CreateSphere('earth', {
-        segments:16,
-        diameter:1
-    }, scene)
+// Planet distances - upper limit 500
 
-    earth.material = earthMaterial;
+// 35.98 Mercury 6.467
+// 67.24 Venus 12.037
+// 92.96 Earth 16.642
+// 141.6 Mars 25.349
+// 483.8 Jupiter 86.609
+// 890.8 Saturn 159.470
+// 1,784 Uranus 319.370
+// 2,793 Neptune 500
 
-    earth.position.x = 5;
-    earth.rotation.y = -23.5;
-    earth.rotation.x = 180;
-
-    earth.orbit = {
-        radius: earth.position.x,
-        speed: 0.01,
-        angle: 0
-    };
-
-    earth.actionManager = new BABYLON.ActionManager(scene);
-    earth.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
-        function(){
-
-        }));
-
-        scene.registerBeforeRender(()=>{
-            earth.position.x = earth.orbit.radius * Math.sin(earth.orbit.angle);
-            earth.position.z = earth.orbit.radius * Math.cos(earth.orbit.angle);
-            earth.orbit.angle += earth.orbit.speed;
-        });
-    }
+//planet sizes - upper limit 5 / .11555
+// sun 432.69 5
+// 15.16 mercury .17517
+// 37.60 venus .63447
+// 39.59 earth .45746
+// 21.06 mars .24335
+// 43.441 jupiter .50196
+// 36.84 saturn .45687
+// 157.59 uranus 1.82095
+// 152.99 neptune 1.77799
 
 function createMercury(scene){
 
@@ -95,16 +93,16 @@ function createMercury(scene){
 
     const mercury = BABYLON.MeshBuilder.CreateSphere('mercury', {
         segments:16,
-        diameter:1
+        diameter:.17517
     }, scene)
 
     mercury.material = material;
 
-    mercury.position.x = 3;
+    mercury.position.x = 6.467;
 
     mercury.orbit = {
         radius: mercury.position.x,
-        speed: 0.01,
+        speed: 0.015,
         angle: 0
     };
 
@@ -120,25 +118,24 @@ function createMercury(scene){
             mercury.orbit.angle += mercury.orbit.speed;
         });
     }
-
 function createVenus(scene){
     //Earth
     const material = new BABYLON.StandardMaterial('material', scene);
     material.diffuseTexture = new BABYLON.Texture('assets/images/venus.jpg', scene);
     material.specularColor = BABYLON.Color3.Black();
 
-    const planet = BABYLON.MeshBuilder.CreateSphere('mercury', {
+    const planet = BABYLON.MeshBuilder.CreateSphere('venus', {
         segments:16,
-        diameter:1
+        diameter:.63447
     }, scene)
 
     planet.material = material;
 
-    planet.position.x = 4;
+    planet.position.x = 12.037;
 
     planet.orbit = {
         radius: planet.position.x,
-        speed: 0.01,
+        speed: .0110,
         angle: 0
     };
 
@@ -154,8 +151,207 @@ function createVenus(scene){
             planet.orbit.angle += planet.orbit.speed;
         });
     }
+function createEarth(scene){
 
+    //Earth
+    const earthMaterial = new BABYLON.StandardMaterial('earthMaterial', scene);
+    earthMaterial.diffuseTexture = new BABYLON.Texture('assets/images/earth.jpg', scene);
+    earthMaterial.specularColor = BABYLON.Color3.Black();
 
+    const earth = BABYLON.MeshBuilder.CreateSphere('earth', {
+        segments:16,
+        diameter:.45746
+    }, scene)
+
+    earth.material = earthMaterial;
+
+    earth.position.x = 16.642;
+    earth.rotation.y = -23.5;
+    earth.rotation.x = 180;
+
+    earth.orbit = {
+        radius: earth.position.x,
+        speed: .0093,
+        angle: 0
+    };
+
+    earth.actionManager = new BABYLON.ActionManager(scene);
+    earth.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
+        function(){
+            console.log("clicked");
+        }));
+
+        scene.registerBeforeRender(()=>{
+            earth.position.x = earth.orbit.radius * Math.sin(earth.orbit.angle);
+            earth.position.z = earth.orbit.radius * Math.cos(earth.orbit.angle);
+            earth.orbit.angle += earth.orbit.speed;
+        });
+    }
+function createMars(scene){
+    //Earth
+    const material = new BABYLON.StandardMaterial('material', scene);
+    material.diffuseTexture = new BABYLON.Texture('assets/images/mars.jpg', scene);
+    material.specularColor = BABYLON.Color3.Black();
+
+    const planet = BABYLON.MeshBuilder.CreateSphere('mars', {
+        segments:16,
+        diameter:.24335
+    }, scene)
+
+    planet.material = material;
+
+    planet.position.x = 25.349;
+
+    planet.orbit = {
+        radius: planet.position.x,
+        speed: .0075,
+        angle: 0
+    };
+
+    planet.actionManager = new BABYLON.ActionManager(scene);
+    planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
+        function(){
+
+        }));
+
+        scene.registerBeforeRender(()=>{
+            planet.position.x = planet.orbit.radius * Math.sin(planet.orbit.angle);
+            planet.position.z = planet.orbit.radius * Math.cos(planet.orbit.angle);
+            planet.orbit.angle += planet.orbit.speed;
+        });
+    }
+function createJupiter(scene){
+    //Earth
+    const material = new BABYLON.StandardMaterial('material', scene);
+    material.diffuseTexture = new BABYLON.Texture('assets/images/jupiter.jpg', scene);
+    material.specularColor = BABYLON.Color3.Black();
+
+    const planet = BABYLON.MeshBuilder.CreateSphere('jupiter', {
+        segments:16,
+        diameter:.50196
+    }, scene)
+
+    planet.material = material;
+
+    planet.position.x = 86.609;
+
+    planet.orbit = {
+        radius: planet.position.x,
+        speed: .0041,
+        angle: 0
+    };
+
+    planet.actionManager = new BABYLON.ActionManager(scene);
+    planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
+        function(){
+
+        }));
+
+        scene.registerBeforeRender(()=>{
+            planet.position.x = planet.orbit.radius * Math.sin(planet.orbit.angle);
+            planet.position.z = planet.orbit.radius * Math.cos(planet.orbit.angle);
+            planet.orbit.angle += planet.orbit.speed;
+        });
+    }
+function createSaturn(scene){
+    //Earth
+    const material = new BABYLON.StandardMaterial('material', scene);
+    material.diffuseTexture = new BABYLON.Texture('assets/images/saturn.jpg', scene);
+    material.specularColor = BABYLON.Color3.Black();
+
+    const planet = BABYLON.MeshBuilder.CreateSphere('saturn', {
+        segments:16,
+        diameter:.45687
+    }, scene)
+
+    planet.material = material;
+
+    planet.position.x = 159.470;
+
+    planet.orbit = {
+        radius: planet.position.x,
+        speed: .0030,
+        angle: 0
+    };
+
+    planet.actionManager = new BABYLON.ActionManager(scene);
+    planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
+        function(){
+
+        }));
+
+        scene.registerBeforeRender(()=>{
+            planet.position.x = planet.orbit.radius * Math.sin(planet.orbit.angle);
+            planet.position.z = planet.orbit.radius * Math.cos(planet.orbit.angle);
+            planet.orbit.angle += planet.orbit.speed;
+        });
+    }
+function createUranus(scene){
+    //Earth
+    const material = new BABYLON.StandardMaterial('material', scene);
+    material.diffuseTexture = new BABYLON.Texture('assets/images/uranus.jpg', scene);
+    material.specularColor = BABYLON.Color3.Black();
+
+    const planet = BABYLON.MeshBuilder.CreateSphere('uranus', {
+        segments:16,
+        diameter:1.82095
+    }, scene)
+    
+    planet.material = material;
+
+    planet.position.x = 319.370;
+
+    planet.orbit = {
+        radius: planet.position.x,
+        speed: .0021,
+        angle: 0
+    };
+
+    planet.actionManager = new BABYLON.ActionManager(scene);
+    planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
+        function(){
+
+        }));
+
+        scene.registerBeforeRender(()=>{
+            planet.position.x = planet.orbit.radius * Math.sin(planet.orbit.angle);
+            planet.position.z = planet.orbit.radius * Math.cos(planet.orbit.angle);
+            planet.orbit.angle += planet.orbit.speed;
+        });
+    }
+function createNeptune(scene){
+    //Earth
+    const material = new BABYLON.StandardMaterial('material', scene);
+    material.diffuseTexture = new BABYLON.Texture('assets/images/neptune.jpg', scene);
+    material.specularColor = BABYLON.Color3.Black();
+
+    const planet = BABYLON.MeshBuilder.CreateSphere('neptune', {
+        segments:16,
+        diameter:1.77799
+    }, scene)
+
+    planet.material = material;
+
+    planet.position.x = 500;
+
+    planet.orbit = {
+        radius: planet.position.x,
+        speed: .0015,
+        angle: 0
+    };
+
+    planet.actionManager = new BABYLON.ActionManager(scene);
+    planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
+        function(){
+
+        }));
+
+        scene.registerBeforeRender(()=>{
+            planet.position.x = planet.orbit.radius * Math.sin(planet.orbit.angle);
+            planet.position.z = planet.orbit.radius * Math.cos(planet.orbit.angle);
+            planet.orbit.angle += planet.orbit.speed;
+        });
+    }
 function createSkybox(scene){
     const skyboxMaterial = new BABYLON.StandardMaterial('skyboxMaterial', scene);
     skyboxMaterial.backFaceCulling = false;
@@ -177,7 +373,6 @@ function createSkybox(scene){
 
     skybox.material = skyboxMaterial;
 }
-
 function createShip(scene){
     BABYLON.SceneLoader.ImportMesh('','assets/models/', 'spaceCraft1.obj', scene,(meshes)=>{
         console.log(meshes);
@@ -188,7 +383,16 @@ function createShip(scene){
     });
 }
 
-
+function createPlanets(scene){
+    createMercury(scene);
+    createVenus(scene);
+    createEarth(scene);
+    createMars(scene);
+    createJupiter(scene);
+    createSaturn(scene);
+    createUranus(scene);
+    createNeptune(scene);
+}
 function createScene(){
     //create scene
     const scene = new BABYLON.Scene(engine);
@@ -204,17 +408,13 @@ function createScene(){
     createSun(scene);
 
     //create planets
-    createMercury(scene);
-    createEarth(scene);
-    createVenus(scene);
+    createPlanets(scene);
 
     //create skybox
     createSkybox(scene);
 
     //create ship
    // createShip(scene);
-
-   
 
     return scene;
 }
