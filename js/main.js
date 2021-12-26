@@ -94,6 +94,13 @@ function createSun(scene){
 // 157.59 uranus 1.82095
 // 152.99 neptune 1.77799
 
+var s = 1;
+
+function setSpeed(speed){
+    s = speed;
+    return s;
+}
+
 function createMercury(scene){
 
     //Earth
@@ -168,7 +175,7 @@ function createEarth(scene){
     earthMaterial.diffuseTexture = new BABYLON.Texture('assets/images/earth.jpg', scene);
     earthMaterial.specularColor = BABYLON.Color3.Black();
 
-    const earth = BABYLON.MeshBuilder.CreateSphere('earth', {
+    var earth = BABYLON.MeshBuilder.CreateSphere('earth', {
         segments:16,
         diameter:.45746
     }, scene)
@@ -200,6 +207,10 @@ function createEarth(scene){
         scene.registerBeforeRender(()=>{
             earth.position.x = earth.orbit.radius * Math.sin(earth.orbit.angle);
             earth.position.z = earth.orbit.radius * Math.cos(earth.orbit.angle);
+
+            earth.orbit.speed = .0093 * s;
+            console.log(earth.orbit.speed);
+            console.log(s);
             earth.orbit.angle += earth.orbit.speed;
         });
     }
@@ -409,6 +420,43 @@ function createPlanets(scene){
     createUranus(scene);
     createNeptune(scene);
 }
+
+function createGUI(){
+    var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+    //pause button
+    var pause = BABYLON.GUI.Button.CreateSimpleButton("pause", "Pause");
+    pause.width = "150px"
+    pause.height = "40px";
+    pause.top = "-45%";
+    pause.left= "";
+    pause.color = "white";
+    pause.cornerRadius = 20;
+    pause.background = "green";
+    pause.onPointerUpObservable.add(function() {
+        let speed = 0
+        setSpeed(speed);
+    });
+
+    //Quarter speed
+    var button2 = BABYLON.GUI.Button.CreateSimpleButton("but2", ".25 Speed");
+    button2.width = "150px"
+    button2.height = "40px";
+    button2.top = "-30%";
+    button2.left= "";
+    button2.color = "white";
+    button2.cornerRadius = 20;
+    button2.background = "green";
+    button2.onPointerUpObservable.add(function() {
+        let speed = .25
+        setSpeed(speed);
+    });
+
+    gui.addControl(pause);
+    gui.addControl(button2);
+}
+
+
 function createScene(){
     //create scene
     const scene = new BABYLON.Scene(engine);
@@ -429,8 +477,8 @@ function createScene(){
     //create skybox
     createSkybox(scene);
 
-    //create ship
-   // createShip(scene);
+    //creat GUI
+    createGUI();
 
     return scene;
 }
