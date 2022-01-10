@@ -2,7 +2,6 @@
 
 // TO DO:
 // Menu to snap to planet
-// Snap tp planet on click
 // Display planet facts
 // Change orbit speed
 // Make earth spin
@@ -132,6 +131,8 @@ function createMercury(scene){
         scene.registerBeforeRender(()=>{
             mercury.position.x = mercury.orbit.radius * Math.sin(mercury.orbit.angle);
             mercury.position.z = mercury.orbit.radius * Math.cos(mercury.orbit.angle);
+
+            mercury.orbit.speed = .015 * s;
             mercury.orbit.angle += mercury.orbit.speed;
         });
     }
@@ -165,6 +166,8 @@ function createVenus(scene){
         scene.registerBeforeRender(()=>{
             planet.position.x = planet.orbit.radius * Math.sin(planet.orbit.angle);
             planet.position.z = planet.orbit.radius * Math.cos(planet.orbit.angle);
+
+            planet.orbit.speed = .0110 * s;
             planet.orbit.angle += planet.orbit.speed;
         });
     }
@@ -195,10 +198,10 @@ function createEarth(scene){
     earth.actionManager = new BABYLON.ActionManager(scene);
     earth.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
         function(){
-            const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3.Zero(), scene);
+            const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3(earth.position.x,0,earth.position.z), scene);
             camera.setTarget(earth);
             scene.activeCamera = camera;
-            scene.activeCamera.attachControl(canvas, true);
+            scene.activeCamera.attachControl(scene, true);
             camera.lowerRadiusLimit = 1.5;
             camera.upperRadiusLimit = 500;
 
@@ -209,8 +212,6 @@ function createEarth(scene){
             earth.position.z = earth.orbit.radius * Math.cos(earth.orbit.angle);
 
             earth.orbit.speed = .0093 * s;
-            console.log(earth.orbit.speed);
-            console.log(s);
             earth.orbit.angle += earth.orbit.speed;
         });
     }
@@ -244,6 +245,8 @@ function createMars(scene){
         scene.registerBeforeRender(()=>{
             planet.position.x = planet.orbit.radius * Math.sin(planet.orbit.angle);
             planet.position.z = planet.orbit.radius * Math.cos(planet.orbit.angle);
+
+            planet.orbit.speed = .0075 * s;
             planet.orbit.angle += planet.orbit.speed;
         });
     }
@@ -277,6 +280,8 @@ function createJupiter(scene){
         scene.registerBeforeRender(()=>{
             planet.position.x = planet.orbit.radius * Math.sin(planet.orbit.angle);
             planet.position.z = planet.orbit.radius * Math.cos(planet.orbit.angle);
+
+            planet.orbit.speed = .0041 * s;
             planet.orbit.angle += planet.orbit.speed;
         });
     }
@@ -310,6 +315,8 @@ function createSaturn(scene){
         scene.registerBeforeRender(()=>{
             planet.position.x = planet.orbit.radius * Math.sin(planet.orbit.angle);
             planet.position.z = planet.orbit.radius * Math.cos(planet.orbit.angle);
+
+            planet.orbit.speed = .0030 * s;
             planet.orbit.angle += planet.orbit.speed;
         });
     }
@@ -343,6 +350,8 @@ function createUranus(scene){
         scene.registerBeforeRender(()=>{
             planet.position.x = planet.orbit.radius * Math.sin(planet.orbit.angle);
             planet.position.z = planet.orbit.radius * Math.cos(planet.orbit.angle);
+
+            planet.orbit.speed = .0021 * s;
             planet.orbit.angle += planet.orbit.speed;
         });
     }
@@ -376,6 +385,8 @@ function createNeptune(scene){
         scene.registerBeforeRender(()=>{
             planet.position.x = planet.orbit.radius * Math.sin(planet.orbit.angle);
             planet.position.z = planet.orbit.radius * Math.cos(planet.orbit.angle);
+
+            planet.orbit.speed = .0015 * s;
             planet.orbit.angle += planet.orbit.speed;
         });
     }
@@ -426,7 +437,7 @@ function createGUI(){
 
     //pause button
     var pause = BABYLON.GUI.Button.CreateSimpleButton("pause", "Pause");
-    pause.width = "150px"
+    pause.width = "100px"
     pause.height = "40px";
     pause.top = "-45%";
     pause.left= "";
@@ -439,21 +450,67 @@ function createGUI(){
     });
 
     //Quarter speed
-    var button2 = BABYLON.GUI.Button.CreateSimpleButton("but2", ".25 Speed");
-    button2.width = "150px"
-    button2.height = "40px";
-    button2.top = "-30%";
-    button2.left= "";
-    button2.color = "white";
-    button2.cornerRadius = 20;
-    button2.background = "green";
-    button2.onPointerUpObservable.add(function() {
+    var quarter = BABYLON.GUI.Button.CreateSimpleButton("quarter", ".25x Speed");
+    quarter.width = "100px"
+    quarter.height = "40px";
+    quarter.top = "-37%";
+    quarter.left= "";
+    quarter.color = "white";
+    quarter.cornerRadius = 20;
+    quarter.background = "green";
+    quarter.onPointerUpObservable.add(function() {
         let speed = .25
         setSpeed(speed);
     });
 
+    //Half speed
+    var half = BABYLON.GUI.Button.CreateSimpleButton("half", ".5x Speed");
+    half.width = "100px"
+    half.height = "40px";
+    half.top = "-29%";
+    half.left= "";
+    half.color = "white";
+    half.cornerRadius = 20;
+    half.background = "green";
+    half.onPointerUpObservable.add(function() {
+        let speed = .5
+        setSpeed(speed);
+    });
+
+    //Full speed
+    var full = BABYLON.GUI.Button.CreateSimpleButton("full", "1x Speed");
+    full.width = "100px"
+    full.height = "40px";
+    full.top = "-21%";
+    full.left= "";
+    full.color = "white";
+    full.cornerRadius = 20;
+    full.background = "green";
+    full.onPointerUpObservable.add(function() {
+        let speed = 1
+        setSpeed(speed);
+    });
+
+    //Double speed
+    var double = BABYLON.GUI.Button.CreateSimpleButton("double", "2x Speed");
+    double.width = "100px"
+    double.height = "40px";
+    double.top = "-13%";
+    double.left= "";
+    double.color = "white";
+    double.cornerRadius = 20;
+    double.background = "green";
+    double.onPointerUpObservable.add(function() {
+        let speed = 2
+        setSpeed(speed);
+    });
+    
+
     gui.addControl(pause);
-    gui.addControl(button2);
+    gui.addControl(quarter);
+    gui.addControl(half);
+    gui.addControl(full);
+    gui.addControl(double);
 }
 
 
