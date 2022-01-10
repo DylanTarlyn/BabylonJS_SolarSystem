@@ -1,12 +1,12 @@
 /// <reference path='./vendor/babylon.d.ts' />
 
 // TO DO:
-// Menu to snap to planet
 // Display planet facts
-// Change orbit speed
-// Make earth spin
+// Make planets spin
 // Add moon
 // Show orbit lines
+// Change render distance
+// Change zoom increments
 
 //get canvas
 const canvas = document.getElementById('renderCanvas');
@@ -49,6 +49,39 @@ function createSun(scene){
     //sunlight
     const sunlight = new BABYLON.PointLight('sunlight', BABYLON.Vector3.Zero(), scene)
     sunlight.intensity = 2;
+
+    //Button to zoom to planet
+    var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+    var zoom = BABYLON.GUI.Button.CreateSimpleButton("zoom", "Sun");
+    zoom.width = "100px"
+    zoom.height = "40px";
+    zoom.top = "-45%";
+    zoom.left= "46%";
+    zoom.color = "white";
+    zoom.cornerRadius = 20;
+    zoom.background = "green";
+
+    zoom.onPointerUpObservable.add(function() { 
+        const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3(0,0,15), scene);
+        camera.setTarget(sun);
+        scene.activeCamera = camera;
+        scene.activeCamera.attachControl(scene, true);
+        camera.lowerRadiusLimit = 6;
+        camera.upperRadiusLimit = 500;
+    });
+    gui.addControl(zoom);
+
+    //Zoom on click
+    sun.actionManager = new BABYLON.ActionManager(scene);
+    sun.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
+        function(){
+            const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3.Zero(), scene);
+            camera.setTarget(sun);
+            scene.activeCamera = camera;
+            scene.activeCamera.attachControl(scene, true);
+            camera.lowerRadiusLimit = 1.5;
+            camera.upperRadiusLimit = 500;
+        }));
 
     //text
     sun.actionManager = new BABYLON.ActionManager(scene);
@@ -122,10 +155,37 @@ function createMercury(scene){
         angle: 0
     };
 
+    //Button to zoom to planet
+    var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+    var zoom = BABYLON.GUI.Button.CreateSimpleButton("zoom", "Mercury");
+    zoom.width = "100px"
+    zoom.height = "40px";
+    zoom.top = "-37%";
+    zoom.left= "46%";
+    zoom.color = "white";
+    zoom.cornerRadius = 20;
+    zoom.background = "green";
+
+    zoom.onPointerUpObservable.add(function() { 
+        const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3(mercury.position.x,0,mercury.position.z), scene);
+        camera.setTarget(mercury);
+        scene.activeCamera = camera;
+        scene.activeCamera.attachControl(scene, true);
+        camera.lowerRadiusLimit = 1.5;
+        camera.upperRadiusLimit = 500;
+    });
+    gui.addControl(zoom);
+
+    //Zoom on click
     mercury.actionManager = new BABYLON.ActionManager(scene);
     mercury.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
         function(){
-
+            const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3(mercury.position.x,0,mercury.position.z), scene);
+            camera.setTarget(mercury);
+            scene.activeCamera = camera;
+            scene.activeCamera.attachControl(scene, true);
+            camera.lowerRadiusLimit = 1;
+            camera.upperRadiusLimit = 500;
         }));
 
         scene.registerBeforeRender(()=>{
@@ -157,10 +217,37 @@ function createVenus(scene){
         angle: 0
     };
 
+    //Button to zoom to planet
+    var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+    var zoom = BABYLON.GUI.Button.CreateSimpleButton("zoom", "Venus");
+    zoom.width = "100px"
+    zoom.height = "40px";
+    zoom.top = "-29%";
+    zoom.left= "46%";
+    zoom.color = "white";
+    zoom.cornerRadius = 20;
+    zoom.background = "green";
+
+    zoom.onPointerUpObservable.add(function() { 
+        const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3(planet.position.x,0,planet.position.z), scene);
+        camera.setTarget(planet);
+        scene.activeCamera = camera;
+        scene.activeCamera.attachControl(scene, true);
+        camera.lowerRadiusLimit = 1.5;
+        camera.upperRadiusLimit = 500;
+    });
+    gui.addControl(zoom);
+
+    //Zoom on click
     planet.actionManager = new BABYLON.ActionManager(scene);
     planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
         function(){
-
+            const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3(planet.position.x,0,planet.position.z), scene);
+            camera.setTarget(planet);
+            scene.activeCamera = camera;
+            scene.activeCamera.attachControl(scene, true);
+            camera.lowerRadiusLimit = 1;
+            camera.upperRadiusLimit = 500;
         }));
 
         scene.registerBeforeRender(()=>{
@@ -195,6 +282,30 @@ function createEarth(scene){
         angle: 0
     };
 
+    //Actions
+
+    //Button to zoom to planet
+    var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+    var zoom = BABYLON.GUI.Button.CreateSimpleButton("zoom", "Earth");
+    zoom.width = "100px"
+    zoom.height = "40px";
+    zoom.top = "-21%";
+    zoom.left= "46%";
+    zoom.color = "white";
+    zoom.cornerRadius = 20;
+    zoom.background = "green";
+
+    zoom.onPointerUpObservable.add(function() { 
+        const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3(earth.position.x,0,earth.position.z), scene);
+        camera.setTarget(earth);
+        scene.activeCamera = camera;
+        scene.activeCamera.attachControl(scene, true);
+        camera.lowerRadiusLimit = 1.5;
+        camera.upperRadiusLimit = 500;
+    });
+    gui.addControl(zoom);
+
+    //Zoom on click
     earth.actionManager = new BABYLON.ActionManager(scene);
     earth.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
         function(){
@@ -204,9 +315,9 @@ function createEarth(scene){
             scene.activeCamera.attachControl(scene, true);
             camera.lowerRadiusLimit = 1.5;
             camera.upperRadiusLimit = 500;
-
         }));
 
+    //Update speed
         scene.registerBeforeRender(()=>{
             earth.position.x = earth.orbit.radius * Math.sin(earth.orbit.angle);
             earth.position.z = earth.orbit.radius * Math.cos(earth.orbit.angle);
@@ -236,11 +347,38 @@ function createMars(scene){
         angle: 0
     };
 
-    planet.actionManager = new BABYLON.ActionManager(scene);
-    planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
-        function(){
+//Button to zoom to planet
+var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+var zoom = BABYLON.GUI.Button.CreateSimpleButton("zoom", "Mars");
+zoom.width = "100px"
+zoom.height = "40px";
+zoom.top = "-13%";
+zoom.left= "46%";
+zoom.color = "white";
+zoom.cornerRadius = 20;
+zoom.background = "green";
 
-        }));
+zoom.onPointerUpObservable.add(function() { 
+    const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3(planet.position.x,0,planet.position.z), scene);
+    camera.setTarget(planet);
+    scene.activeCamera = camera;
+    scene.activeCamera.attachControl(scene, true);
+    camera.lowerRadiusLimit = 1.2;
+    camera.upperRadiusLimit = 500;
+});
+gui.addControl(zoom);
+
+//Zoom on click
+planet.actionManager = new BABYLON.ActionManager(scene);
+planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
+    function(){
+        const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3(planet.position.x,0,planet.position.z), scene);
+        camera.setTarget(planet);
+        scene.activeCamera = camera;
+        scene.activeCamera.attachControl(scene, true);
+        camera.lowerRadiusLimit = 1;
+        camera.upperRadiusLimit = 500;
+    }));
 
         scene.registerBeforeRender(()=>{
             planet.position.x = planet.orbit.radius * Math.sin(planet.orbit.angle);
@@ -271,11 +409,38 @@ function createJupiter(scene){
         angle: 0
     };
 
-    planet.actionManager = new BABYLON.ActionManager(scene);
-    planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
-        function(){
+//Button to zoom to planet
+var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+var zoom = BABYLON.GUI.Button.CreateSimpleButton("zoom", "Jupiter");
+zoom.width = "100px"
+zoom.height = "40px";
+zoom.top = "-5%";
+zoom.left= "46%";
+zoom.color = "white";
+zoom.cornerRadius = 20;
+zoom.background = "green";
 
-        }));
+zoom.onPointerUpObservable.add(function() { 
+    const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3(planet.position.x,0,planet.position.z), scene);
+    camera.setTarget(planet);
+    scene.activeCamera = camera;
+    scene.activeCamera.attachControl(scene, true);
+    camera.lowerRadiusLimit = 1.3;
+    camera.upperRadiusLimit = 500;
+});
+gui.addControl(zoom);
+
+//Zoom on click
+planet.actionManager = new BABYLON.ActionManager(scene);
+planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
+    function(){
+        const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3(planet.position.x,0,planet.position.z), scene);
+        camera.setTarget(planet);
+        scene.activeCamera = camera;
+        scene.activeCamera.attachControl(scene, true);
+        camera.lowerRadiusLimit = 1;
+        camera.upperRadiusLimit = 500;
+    }));
 
         scene.registerBeforeRender(()=>{
             planet.position.x = planet.orbit.radius * Math.sin(planet.orbit.angle);
@@ -306,11 +471,38 @@ function createSaturn(scene){
         angle: 0
     };
 
-    planet.actionManager = new BABYLON.ActionManager(scene);
-    planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
-        function(){
+//Button to zoom to planet
+var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+var zoom = BABYLON.GUI.Button.CreateSimpleButton("zoom", "Saturn");
+zoom.width = "100px"
+zoom.height = "40px";
+zoom.top = "3%";
+zoom.left= "46%";
+zoom.color = "white";
+zoom.cornerRadius = 20;
+zoom.background = "green";
 
-        }));
+zoom.onPointerUpObservable.add(function() { 
+    const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3(planet.position.x,0,planet.position.z), scene);
+    camera.setTarget(planet);
+    scene.activeCamera = camera;
+    scene.activeCamera.attachControl(scene, true);
+    camera.lowerRadiusLimit = 1.25;
+    camera.upperRadiusLimit = 500;
+});
+gui.addControl(zoom);
+
+//Zoom on click
+planet.actionManager = new BABYLON.ActionManager(scene);
+planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
+    function(){
+        const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3(planet.position.x,0,planet.position.z), scene);
+        camera.setTarget(planet);
+        scene.activeCamera = camera;
+        scene.activeCamera.attachControl(scene, true);
+        camera.lowerRadiusLimit = 1;
+        camera.upperRadiusLimit = 500;
+    }));
 
         scene.registerBeforeRender(()=>{
             planet.position.x = planet.orbit.radius * Math.sin(planet.orbit.angle);
@@ -341,11 +533,38 @@ function createUranus(scene){
         angle: 0
     };
 
-    planet.actionManager = new BABYLON.ActionManager(scene);
-    planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
-        function(){
+//Button to zoom to planet
+var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+var zoom = BABYLON.GUI.Button.CreateSimpleButton("zoom", "Uranus");
+zoom.width = "100px"
+zoom.height = "40px";
+zoom.top = "11%";
+zoom.left= "46%";
+zoom.color = "white";
+zoom.cornerRadius = 20;
+zoom.background = "green";
 
-        }));
+zoom.onPointerUpObservable.add(function() { 
+    const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3(planet.position.x,0,planet.position.z), scene);
+    camera.setTarget(planet);
+    scene.activeCamera = camera;
+    scene.activeCamera.attachControl(scene, true);
+    camera.lowerRadiusLimit = 2.5;
+    camera.upperRadiusLimit = 500;
+});
+gui.addControl(zoom);
+
+//Zoom on click
+planet.actionManager = new BABYLON.ActionManager(scene);
+planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
+    function(){
+        const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3(planet.position.x,0,planet.position.z), scene);
+        camera.setTarget(planet);
+        scene.activeCamera = camera;
+        scene.activeCamera.attachControl(scene, true);
+        camera.lowerRadiusLimit = 1;
+        camera.upperRadiusLimit = 500;
+    }));
 
         scene.registerBeforeRender(()=>{
             planet.position.x = planet.orbit.radius * Math.sin(planet.orbit.angle);
@@ -376,11 +595,38 @@ function createNeptune(scene){
         angle: 0
     };
 
-    planet.actionManager = new BABYLON.ActionManager(scene);
-    planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
-        function(){
+//Button to zoom to planet
+var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+var zoom = BABYLON.GUI.Button.CreateSimpleButton("zoom", "Neptune");
+zoom.width = "100px"
+zoom.height = "40px";
+zoom.top = "19%";
+zoom.left= "46%";
+zoom.color = "white";
+zoom.cornerRadius = 20;
+zoom.background = "green";
 
-        }));
+zoom.onPointerUpObservable.add(function() { 
+    const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3(planet.position.x,0,planet.position.z), scene);
+    camera.setTarget(planet);
+    scene.activeCamera = camera;
+    scene.activeCamera.attachControl(scene, true);
+    camera.lowerRadiusLimit = 2.5;
+    camera.upperRadiusLimit = 500;
+});
+gui.addControl(zoom);
+
+//Zoom on click
+planet.actionManager = new BABYLON.ActionManager(scene);
+planet.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
+    function(){
+        const camera = new BABYLON.ArcRotateCamera('camera', 0,0,0, new BABYLON.Vector3(planet.position.x,0,planet.position.z), scene);
+        camera.setTarget(planet);
+        scene.activeCamera = camera;
+        scene.activeCamera.attachControl(scene, true);
+        camera.lowerRadiusLimit = 1;
+        camera.upperRadiusLimit = 500;
+    }));
 
         scene.registerBeforeRender(()=>{
             planet.position.x = planet.orbit.radius * Math.sin(planet.orbit.angle);
@@ -434,7 +680,6 @@ function createPlanets(scene){
 
 function createGUI(){
     var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-
     //pause button
     var pause = BABYLON.GUI.Button.CreateSimpleButton("pause", "Pause");
     pause.width = "100px"
@@ -505,7 +750,6 @@ function createGUI(){
         setSpeed(speed);
     });
     
-
     gui.addControl(pause);
     gui.addControl(quarter);
     gui.addControl(half);
